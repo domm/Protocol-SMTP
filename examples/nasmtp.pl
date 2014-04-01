@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use IO::Async::Loop;
-use Net::Async::SMTP;
+use Net::Async::SMTP::Client;
 use Email::Simple;
 use Net::DNS;
 use IO::Socket::SSL qw(SSL_VERIFY_NONE);
@@ -29,7 +29,7 @@ my $email = Email::Simple->create(
 warn "Will try to send this email:\n" . $email->as_string;
 
 my $loop = IO::Async::Loop->new;
-my $smtp = Net::Async::SMTP->new(
+my $smtp = Net::Async::SMTP::Client->new(
 	domain => $domain,
 	# You can override the auth method, but this should only
 	# be necessary for a badly-configured mail server.

@@ -41,14 +41,6 @@ Missing features:
 
 1;
 
-=head1 SEE ALSO
-
-=over 4
-
-=item *
-
-=back
-
 =head1 AUTHOR
 
 Tom Molesworth <cpan@entitymodel.com>
