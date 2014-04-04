@@ -15,6 +15,10 @@ Protocol::SMTP - abstract support for the SMTP mail sending protocol
 
 =head1 DESCRIPTION
 
+See L<Protocol::SMTP::Client>. Note that this is an abstract protocol
+handler, it does not deal with the transport itself - use L<Net::Async::SMTP>
+if you want to send emails.
+
 Features supported at the moment:
 
 =over 4
