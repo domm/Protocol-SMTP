@@ -2,6 +2,16 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+	Bug fixes:
+	* Only apply BODY= in MAIL FROM line if we have an encoding (currently,
+	this is always the case but it will change in future)
+
+	Tests:
+	* Reimplemented all the tests so we actually have some coverage
+	and don't need external servers or non-CPAN deps
+
+	Dependencies:
+	* Added Test::Fatal for tests
 
 0.001     2014-04-20 16:28:55+01:00 Europe/London
 	Initial CPAN release
