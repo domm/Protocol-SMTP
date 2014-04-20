@@ -263,9 +263,11 @@ sub send_mail {
 	# just yet.
 	my @mail = split /\x0D\x0A/, $args{data};
 
-	my $mail_line = 'MAIL FROM:<' . $args{from} . '>';
-	$mail_line .= ' BODY=' . $self->body_encoding if $self->body_encoding;
-	$self->write_line($mail_line);
+	{
+		my $mail_line = 'MAIL FROM:<' . $args{from} . '>';
+		$mail_line .= ' BODY=' . $self->body_encoding if $self->body_encoding;
+		$self->write_line($mail_line);
+	}
 	$self->wait_for(250)
 	->then(sub {
 		fmap_void {
@@ -286,11 +288,11 @@ sub send_mail {
 		} generate => sub {
 			return unless @mail;
 			shift @mail
-		})->then(sub {
-			$self->{sending_content} = 0;
-			$self->write_line('.');
-			$self->wait_for(250)
-		});
+		})
+	})->then(sub {
+		$self->{sending_content} = 0;
+		$self->write_line('.');
+		$self->wait_for(250)
 	});
 }
 
@@ -432,8 +434,10 @@ sub handle_line {
 	if($multi eq ' ') {
 		my $task = shift @{$self->{pending}};
 		if($task->[0] == $code) {
+			$self->debug_printf("Applying line [$_] for multi-line task") for @{$self->{multi}};
 			$task->[1]->done(@{$self->{multi}});
 		} else {
+			$self->debug_printf("We had an unexpected code - $code instead of " . $task->[0]);
 			$task->[1]->fail($code => $remainder, 'expected ' . $task->[0]);
 		}
 		$self->{multi} = [];
