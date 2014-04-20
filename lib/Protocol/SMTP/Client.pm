@@ -1,12 +1,27 @@
 package Protocol::SMTP::Client;
+
 use strict;
 use warnings;
+use utf8;
+
 use curry;
 use Future;
 use Future::Utils qw(try_repeat fmap_void);
 use Authen::SASL;
 use MIME::Base64 qw(encode_base64 decode_base64);
 use Encode;
+
+=head1 NAME
+
+Protocol::SMTP::Client - abstract client support for mail sending
+
+=head1 DESCRIPTION
+
+Provides a client implementation for interacting with SMTP servers.
+
+=cut
+
+=head1 METHODS
 
 =head2 new
 
@@ -31,6 +46,27 @@ Set this on instantiation to pick a specific auth method.
 =cut
 
 sub auth_mechanism_override { shift->{auth_mechanism_override} }
+
+=head2 login
+
+Attempts to log in to the server. Takes the following named parameters:
+
+=over 4
+
+=item * user - the username we're logging in with, might be your email address
+or a plain username
+
+=item * pass - used for password-based auth mechanisms such as PLAIN or MD5
+
+=back
+
+Note that other auth mechanisms may provide additional fields - this will
+mostly be determined by how L<Authen::SASL> deals with the authentication
+process.
+
+Returns a L<Future> which resolves once login completes or fails.
+
+=cut
 
 sub login {
 	my $self = shift;
@@ -140,6 +176,12 @@ sub new_future {
 	my $factory = shift->{future_factory};
 	$factory ? $factory->() : Future->new;
 }
+
+=head2 debug_printf
+
+Used internally for debugging, returns an empty list.
+
+=cut
 
 sub debug_printf {
 	return unless $ENV{'PERL_SMTP_DEBUG'};
@@ -295,6 +337,12 @@ sub remote_feature {
 		$self->{features}{$feature} = $param // 1;
 	}
 }
+
+=head2 auth_methods
+
+Internal accessor, returns the list of defined authentication methods.
+
+=cut
 
 sub auth_methods { @{shift->{auth_methods}} }
 
