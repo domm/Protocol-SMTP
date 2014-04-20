@@ -1,12 +1,13 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use utf8;
+
 use IO::Async::Loop;
 use Net::Async::SMTP::Client;
 use Email::Simple;
 use Net::DNS;
 use IO::Socket::SSL qw(SSL_VERIFY_NONE);
-use utf8;
 
 binmode STDOUT, ':encoding(UTF-8)';
 
@@ -52,7 +53,7 @@ $smtp->connected->then(sub {
 	# and this is the method for sending.
 	$smtp->send(
 		# And this as well.
-		to => 'person@example.com',
+		to   => 'person@example.com',
 		from => $user,
 		data => $email->as_string,
 	)
