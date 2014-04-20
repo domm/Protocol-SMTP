@@ -34,6 +34,7 @@ Takes no parameters.
 sub new {
 	my $class = shift;
 	my $self = bless {@_}, $class;
+	$self->{auth_methods} = [];
 	$self->{task_queue} = [];
 	$self->{multi} = [];
 	$self
