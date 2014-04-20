@@ -9,7 +9,7 @@ use Protocol::SMTP::Client;
 	use parent qw(Future);
 }
 my $written = '';
-# Sidestep line ending annoyances 
+# Sidestep line ending annoyances
 sub line() {
 	return $1 if $written =~ s/^(.*?)\x0D\x0A//;
 	return undef;
