@@ -123,6 +123,24 @@ sub login {
 	$f;
 }
 
+=head2 quit
+
+Quit the SMTP connection
+
+Returns a L<Future> which resolves once QUIT completes or fails.
+
+=cut
+
+sub quit {
+	my $self = shift;
+
+	$self->write_line(
+		q{QUIT}
+	);
+	$self->wait_for(221)->on_done(sub {
+		$self->debug_printf("Quit");
+    });
+}
 
 =head2 send
 
